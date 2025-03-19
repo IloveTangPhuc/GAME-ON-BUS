@@ -13,7 +13,7 @@
         }
 
         body {
-            background-image: url('https://github.com/user-attachments/assets/8ba64de8-26ad-438c-b92');
+            background-image: url('https://github.com/user-attachments/assets/9b320a0c-215b-49a7-bc20-bde21d8b8020');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -93,7 +93,19 @@
             if (!playerName) {
                 alert("Bạn phải nhập tên trước!");
                 return;
-            }
+                const questions = {
+                1: { 
+                    text: "Câu hỏi 1", 
+                    image: "https://github.com/user-attachments/assets/5a4cb9ee-62ae-4d1d-a767-34e73834ebb9", 
+                    answers: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+                    correct: ["4", "6", "8", "9"]
+                },
+                2: { 
+                    text: "Câu hỏi 2", 
+                    image: "https://github.com/user-attachments/assets/7f1d49b3-bf1b-4228-be74-55a1c73c12b1",
+                    answers: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+                    correct: ["2", "3", "4", "88"]
+                },
             document.getElementById("result").innerText = "Bạn nhận được câu hỏi!";
             document.getElementById("quiz").style.display = "block";
         }
