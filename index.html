@@ -7,34 +7,31 @@
     
     <style>
         body {
-            background-image: url('https://github.com/user-attachments/assets/2caac5b0-7382-44d0-bc2a-1c4b88220786');
+            background-image: url('https://github.com/user-attachments/assets/8ba64de8-26ad-438c-b92b-cfd0401a7a2d');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            height: 100vh;
+            height: 80vh;
             margin: 0;
             text-align: center;
             font-family: Arial, sans-serif;
         }
-        .wheel-container { margin: 20px auto; }
         .quiz-container { display: none; margin-top: 20px; }
-        .image-container { 
-            width: 300px; 
-            height: 300px; 
-            border: 2px solid #000; 
-            margin: 10px auto; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-        }
+        .image-container { width: 300px; height: 300px; border: 2px solid #000; margin: 10px auto; display: flex; align-items: center; justify-content: center; }
         img { max-width: 100%; max-height: 100%; display: none; }
+        #correct-answer, #score { font-weight: bold; color: green; display: none; }
+        input[type="text"] { padding: 5px; margin: 10px; width: 200px; }
     </style>
 </head>
 <body>
     <h1>GAME ON BUS: VƯỢT NGÀN CAPTCHA CÙNG THE MASSIVE LOVE</h1>
     <p>Nhấn nút để quay số và nhận câu hỏi!</p>
+    
+    <input type="text" id="player-name" placeholder="Nhập tên của bạn">
     <button onclick="spinWheel()">Quay số</button>
+    
     <h2 id="result"></h2>
+    
     <div id="quiz" class="quiz-container">
         <h3>Câu hỏi:</h3>
         <div class="image-container">
@@ -43,12 +40,23 @@
         <p id="question-text">Câu hỏi sẽ hiển thị ở đây.</p>
         <form id="quiz-form">
             <div id="answers"></div>
-            <button type="submit">Nộp bài</button>
+            <button type="button" onclick="submitAnswer()">Nộp bài</button>
         </form>
+        <p id="score"></p>
+        <p id="correct-answer"></p>
+        <button id="submit-form-btn" style="display:none;" onclick="sendToForm()">Gửi kết quả</button>
     </div>
 
     <script>
+        let currentQuestion = {};
+
         function spinWheel() {
+            let playerName = document.getElementById("player-name").value.trim();
+            if (playerName === "") {
+                alert("Bạn phải nhập tên trước!");
+                return;
+            }
+
             let randomNum = Math.floor(Math.random() * 9) + 1;
             document.getElementById("result").innerText = "Bạn nhận được câu hỏi " + randomNum;
             loadQuestion(randomNum);
@@ -58,32 +66,33 @@
             const questions = {
                 1: { 
                     text: "Câu hỏi 1", 
-                    image: "(https://github.com/user-attachments/assets/391ae417-f0f5-4c49-9611-0e1ba4d393fe", 
-                    answers: ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
-                    correct: ["4", "6", "8", "9"] //Đáp án đúng
+                    image: "https://github.com/user-attachments/assets/5a4cb9ee-62ae-4d1d-a767-34e73834ebb9", 
+                    answers: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+                    correct: ["4", "6", "8", "9"]
                 },
                 2: { 
                     text: "Câu hỏi 2", 
-                    image: "https://raw.githubusercontent.com/user-attachments/assets/your-image-2.jpg",
-                    answers: ["A", "B", "C", "D", "E", "F"] 
+                    image: "https://github.com/user-attachments/assets/7f1d49b3-bf1b-4228-be74-55a1c73c12b1",
+                    answers: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+                    correct: ["2", "3", "4", "88"]
                 },
-                // Thêm câu hỏi khác
             };
 
             if (questions[num]) {
+                currentQuestion = questions[num];
                 document.getElementById("quiz").style.display = "block";
-                document.getElementById("question-text").innerText = questions[num].text;
+                document.getElementById("question-text").innerText = currentQuestion.text;
                 let questionImage = document.getElementById("question-image");
 
-                if (questions[num].image) {
-                    questionImage.src = questions[num].image;
+                if (currentQuestion.image) {
+                    questionImage.src = currentQuestion.image;
                     questionImage.style.display = "block";
                 } else {
                     questionImage.style.display = "none";
                 }
 
                 let answersHtml = "";
-                questions[num].answers.forEach((answer, index) => {
+                currentQuestion.answers.forEach(answer => {
                     answersHtml += `<input type='checkbox' name='answer' value='${answer}' class='answer-checkbox' onclick='limitSelection()'> ${answer}<br>`;
                 });
                 document.getElementById("answers").innerHTML = answersHtml;
@@ -100,7 +109,54 @@
 
             if (selectedCount > 4) {
                 alert("Bạn chỉ được chọn tối đa 4 đáp án!");
-                this.checked = false; // Không cho phép chọn quá 4
+                this.checked = false;
+            }
+        }
+
+        function submitAnswer() {
+            let selectedAnswers = [];
+            document.querySelectorAll(".answer-checkbox:checked").forEach(checkbox => {
+                selectedAnswers.push(checkbox.value);
+            });
+
+            if (selectedAnswers.length === 0) {
+                alert("Bạn phải chọn ít nhất một đáp án!");
+                return;
+            }
+
+            let correctCount = selectedAnswers.filter(ans => currentQuestion.correct.includes(ans)).length;
+            let totalCorrect = currentQuestion.correct.length;
+
+            document.getElementById("score").innerText = `Bạn trả lời đúng ${correctCount}/${totalCorrect} đáp án`;
+            document.getElementById("score").style.display = "block";
+
+            document.getElementById("correct-answer").innerText = "Đáp án đúng: " + currentQuestion.correct.join(", ");
+            document.getElementById("correct-answer").style.display = "block";
+
+            document.getElementById("submit-form-btn").style.display = "block";
+        }
+
+        function sendToForm() {
+            let playerName = document.getElementById("player-name").value.trim();
+            let questionText = currentQuestion.text;
+            let selectedAnswers = Array.from(document.querySelectorAll(".answer-checkbox:checked"))
+                .map(checkbox => checkbox.value).join(", ");
+            let correctAnswers = currentQuestion.correct.join(", ");
+
+            let formUrl = "https://docs.google.com/spreadsheets/d/1FXBrWpU9RmOgfuY-d84pOzsvxdxoMADttocC_LGAJwM/edit?gid=0#gid=0";
+            let params = new URLSearchParams({
+                "entry.YOUR_ENTRY_ID1": playerName, 
+                "entry.YOUR_ENTRY_ID2": questionText, 
+                "entry.YOUR_ENTRY_ID3": selectedAnswers, 
+                "entry.YOUR_ENTRY_ID4": correctAnswers
+            });
+
+            window.open(`${formUrl}?${params.toString()}`, "_blank");
+        }
+    </script>
+</body>
+</html>
+
             }
         }
     </script>
