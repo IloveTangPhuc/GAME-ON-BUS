@@ -106,83 +106,86 @@
         <p id="correct-answer"></p>
     </div>
 
-    <script>
-        let currentQuestion = {};
+   <script>
+    let currentQuestion = {};
 
-        const questions = {
-            1: { 
-                text: "Câu hỏi 1: Chọn 4 đáp án đúng", 
-                image: "https://upanh.tv/image/4689.uRRo7z",
-                answers: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
-                correct: ["4", "6", "8", "99"]
-            },
-            2: { 
-                text: "Câu hỏi 2: Chọn 4 đáp án đúng", 
-                image: "https://upanh.tv/image/uRRLag",
-                answers: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
-                correct: ["2", "3", "4", "88"]
-            }
-        };
+    const questions = {
+        1: { 
+            text: "Câu hỏi 1: Chọn 4 đáp án đúng", 
+            image: "https://upanh.tv/image/4689.uRRo7z",
+            answers: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+            correct: ["4", "6", "8", "99"]
+        },
+        2: { 
+            text: "Câu hỏi 2: Chọn 4 đáp án đúng", 
+            image: "https://upanh.tv/image/uRRLag",
+            answers: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+            correct: ["2", "3", "4", "88"]
+        }
+    };
 
-        function spinWheel() {
-            let playerName = document.getElementById("player-name").value.trim();
-            if (!playerName) {
-                alert("Bạn phải nhập tên trước!");
-                return;
-            }
-
-            let randomNum = Math.floor(Math.random() * 2) + 1;
-            document.getElementById("result").innerText = "Bạn nhận được câu hỏi số " + randomNum;
-            loadQuestion(randomNum);
+    function spinWheel() {
+        let playerName = document.getElementById("player-name").value.trim();
+        if (!playerName) {
+            alert("Bạn phải nhập tên trước!");
+            return;
         }
 
-        function loadQuestion(num) {
-            currentQuestion = questions[num];
-            document.getElementById("quiz").style.display = "block";
-            document.getElementById("question-text").innerText = currentQuestion.text;
-            document.getElementById("question-image").src = currentQuestion.image;
+        let questionNumbers = Object.keys(questions); // Lấy danh sách số câu hỏi
+        let randomIndex = Math.floor(Math.random() * questionNumbers.length);
+        let randomNum = questionNumbers[randomIndex]; // Chọn số câu hỏi ngẫu nhiên
 
-            let answersHtml = "";
-            currentQuestion.answers.forEach(answer => {
-                answersHtml += `<input type='checkbox' name='answer' value='${answer}' class='answer-checkbox' onclick='limitSelection()'> ${answer}<br>`;
-            });
-            document.getElementById("answers").innerHTML = answersHtml;
+        document.getElementById("result").innerText = "Bạn nhận được câu hỏi số " + randomNum;
+        loadQuestion(randomNum);
+    }
+
+    function loadQuestion(num) {
+        currentQuestion = questions[num];
+        document.getElementById("quiz").style.display = "block";
+        document.getElementById("question-text").innerText = currentQuestion.text;
+        document.getElementById("question-image").src = currentQuestion.image;
+
+        let answersHtml = "";
+        currentQuestion.answers.forEach(answer => {
+            answersHtml += `<input type='checkbox' name='answer' value='${answer}' class='answer-checkbox' onclick='limitSelection()'> ${answer}<br>`;
+        });
+        document.getElementById("answers").innerHTML = answersHtml;
+    }
+
+    function limitSelection() {
+        let checkboxes = document.querySelectorAll(".answer-checkbox");
+        let selectedCount = 0;
+
+        checkboxes.forEach(checkbox => {
+            if (checkbox.checked) selectedCount++;
+        });
+
+        if (selectedCount > 4) {
+            alert("Bạn chỉ được chọn tối đa 4 đáp án!");
+            this.checked = false;
+        }
+    }
+
+    function submitAnswer() {
+        let selectedAnswers = [];
+        document.querySelectorAll(".answer-checkbox:checked").forEach(checkbox => {
+            selectedAnswers.push(checkbox.value);
+        });
+
+        if (selectedAnswers.length !== 4) {
+            alert("Bạn phải chọn đúng 4 đáp án!");
+            return;
         }
 
-        function limitSelection() {
-            let checkboxes = document.querySelectorAll(".answer-checkbox");
-            let selectedCount = 0;
+        let correctCount = selectedAnswers.filter(ans => currentQuestion.correct.includes(ans)).length;
+        let totalCorrect = currentQuestion.correct.length;
 
-            checkboxes.forEach(checkbox => {
-                if (checkbox.checked) selectedCount++;
-            });
+        document.getElementById("score").innerText = `Bạn trả lời đúng ${correctCount}/${totalCorrect} đáp án`;
+        document.getElementById("score").style.display = "block";
 
-            if (selectedCount > 4) {
-                alert("Bạn chỉ được chọn tối đa 4 đáp án!");
-                this.checked = false;
-            }
-        }
-
-        function submitAnswer() {
-            let selectedAnswers = [];
-            document.querySelectorAll(".answer-checkbox:checked").forEach(checkbox => {
-                selectedAnswers.push(checkbox.value);
-            });
-
-            if (selectedAnswers.length !== 4) {
-                alert("Bạn phải chọn đúng 4 đáp án!");
-                return;
-            }
-
-            let correctCount = selectedAnswers.filter(ans => currentQuestion.correct.includes(ans)).length;
-            let totalCorrect = currentQuestion.correct.length;
-
-            document.getElementById("score").innerText = `Bạn trả lời đúng ${correctCount}/${totalCorrect} đáp án`;
-            document.getElementById("score").style.display = "block";
-
-            document.getElementById("correct-answer").innerText = "Đáp án đúng: " + currentQuestion.correct.join(", ");
-            document.getElementById("correct-answer").style.display = "block";
-        }
-    </script>
+        document.getElementById("correct-answer").innerText = "Đáp án đúng: " + currentQuestion.correct.join(", ");
+        document.getElementById("correct-answer").style.display = "block";
+    }
+</script>
 </body>
 </html>
