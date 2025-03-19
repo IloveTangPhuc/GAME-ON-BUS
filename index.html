@@ -13,7 +13,7 @@
         }
 
         body {
-            background-image: url('https://github.com/user-attachments/assets/9b320a0c-215b-49a7-bc20-bde21d8b8020');
+            background-image: url('https://upanh.tv/image/tang-phuc-2-1.uRREYO');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -28,10 +28,6 @@
             padding: 20px;
         }
 
-        h1, p {
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Thêm bóng để dễ đọc */
-        }
-
         .quiz-container {
             background: rgba(0, 0, 0, 0.6);
             padding: 15px;
@@ -40,10 +36,22 @@
             max-width: 400px;
         }
 
+        .image-container {
+            width: 100%;
+            max-width: 550px;
+            aspect-ratio: 55 / 90; /* Giữ đúng tỉ lệ 55x90cm */
+            margin: auto;
+            border: 2px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
         .image-container img {
             width: 100%;
-            height: auto;
-            border-radius: 10px;
+            height: 100%;
+            object-fit: cover;
         }
 
         button {
@@ -54,6 +62,7 @@
             cursor: pointer;
             font-size: 16px;
             border-radius: 5px;
+            margin-top: 10px;
         }
 
         button:hover {
@@ -66,6 +75,11 @@
             margin-bottom: 10px;
             border-radius: 5px;
             border: none;
+        }
+
+        #result, #correct-answer, #score {
+            font-weight: bold;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -83,31 +97,91 @@
         <div class="image-container">
             <img id="question-image" src="" alt="Câu hỏi">
         </div>
-        <p id="question-text">Câu hỏi sẽ hiển thị ở đây.</p>
-        <button onclick="submitAnswer()">Nộp bài</button>
+        <p id="question-text"></p>
+        <form id="quiz-form">
+            <div id="answers"></div>
+            <button type="button" onclick="submitAnswer()">Nộp bài</button>
+        </form>
+        <p id="score"></p>
+        <p id="correct-answer"></p>
     </div>
 
     <script>
+        let currentQuestion = {};
+
+        const questions = {
+            1: { 
+                text: "Câu hỏi 1: Chọn 4 đáp án đúng", 
+                image: "https://upanh.tv/image/4689.uRRo7z",
+                answers: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+                correct: ["4", "6", "8", "99"]
+            },
+            2: { 
+                text: "Câu hỏi 2: Chọn 4 đáp án đúng", 
+                image: "https://upanh.tv/image/uRRLag",
+                answers: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+                correct: ["2", "3", "4", "88"]
+            }
+        };
+
         function spinWheel() {
             let playerName = document.getElementById("player-name").value.trim();
             if (!playerName) {
                 alert("Bạn phải nhập tên trước!");
                 return;
-                const questions = {
-                1: { 
-                    text: "Câu hỏi 1", 
-                    image: "https://github.com/user-attachments/assets/5a4cb9ee-62ae-4d1d-a767-34e73834ebb9", 
-                    answers: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
-                    correct: ["4", "6", "8", "9"]
-                },
-                2: { 
-                    text: "Câu hỏi 2", 
-                    image: "https://github.com/user-attachments/assets/7f1d49b3-bf1b-4228-be74-55a1c73c12b1",
-                    answers: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
-                    correct: ["2", "3", "4", "88"]
-                },
-            document.getElementById("result").innerText = "Bạn nhận được câu hỏi!";
+            }
+
+            let randomNum = Math.floor(Math.random() * 2) + 1;
+            document.getElementById("result").innerText = "Bạn nhận được câu hỏi số " + randomNum;
+            loadQuestion(randomNum);
+        }
+
+        function loadQuestion(num) {
+            currentQuestion = questions[num];
             document.getElementById("quiz").style.display = "block";
+            document.getElementById("question-text").innerText = currentQuestion.text;
+            document.getElementById("question-image").src = currentQuestion.image;
+
+            let answersHtml = "";
+            currentQuestion.answers.forEach(answer => {
+                answersHtml += `<input type='checkbox' name='answer' value='${answer}' class='answer-checkbox' onclick='limitSelection()'> ${answer}<br>`;
+            });
+            document.getElementById("answers").innerHTML = answersHtml;
+        }
+
+        function limitSelection() {
+            let checkboxes = document.querySelectorAll(".answer-checkbox");
+            let selectedCount = 0;
+
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) selectedCount++;
+            });
+
+            if (selectedCount > 4) {
+                alert("Bạn chỉ được chọn tối đa 4 đáp án!");
+                this.checked = false;
+            }
+        }
+
+        function submitAnswer() {
+            let selectedAnswers = [];
+            document.querySelectorAll(".answer-checkbox:checked").forEach(checkbox => {
+                selectedAnswers.push(checkbox.value);
+            });
+
+            if (selectedAnswers.length !== 4) {
+                alert("Bạn phải chọn đúng 4 đáp án!");
+                return;
+            }
+
+            let correctCount = selectedAnswers.filter(ans => currentQuestion.correct.includes(ans)).length;
+            let totalCorrect = currentQuestion.correct.length;
+
+            document.getElementById("score").innerText = `Bạn trả lời đúng ${correctCount}/${totalCorrect} đáp án`;
+            document.getElementById("score").style.display = "block";
+
+            document.getElementById("correct-answer").innerText = "Đáp án đúng: " + currentQuestion.correct.join(", ");
+            document.getElementById("correct-answer").style.display = "block";
         }
     </script>
 </body>
