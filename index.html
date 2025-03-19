@@ -13,205 +13,89 @@
         }
 
         body {
-            background-color: #f8f9fa;
-            text-align: center;
-            font-family: Arial, sans-serif;
+            background-image: url('https://github.com/user-attachments/assets/8ba64de8-26ad-438c-b92');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            padding: 10px;
+            text-align: center;
+            color: white; /* Màu chữ trắng */
+            font-family: Arial, sans-serif;
+            padding: 20px;
         }
 
-        h1 {
-            font-size: 20px;
-            margin-bottom: 10px;
+        h1, p {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Thêm bóng để dễ đọc */
         }
 
-        .container {
+        .quiz-container {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 15px;
+            border-radius: 10px;
             width: 90%;
             max-width: 400px;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        .quiz-container { 
-            display: none;
-            margin-top: 20px;
-        }
-
-        .image-container {
-            width: 100%;
-            max-width: 350px;
-            height: auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 10px auto;
-        }
-
-        img {
+        .image-container img {
             width: 100%;
             height: auto;
-            display: none;
             border-radius: 10px;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
         }
 
         button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 10px;
-            background: #007bff;
+            background: #ff4500;
             color: white;
+            padding: 10px;
             border: none;
-            border-radius: 5px;
-            font-size: 16px;
             cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
         }
 
         button:hover {
-            background: #0056b3;
+            background: #e03e00;
         }
 
-        #answers {
-            text-align: left;
+        input[type="text"] {
+            padding: 10px;
+            width: 80%;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: none;
         }
-
-        .answer-checkbox {
-            margin: 5px 0;
-        }
-
-        #score, #correct-answer {
-            font-weight: bold;
-            color: green;
-            display: none;
-            margin-top: 10px;
-        }
-
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>GAME ON BUS: VƯỢT NGÀN CAPTCHA</h1>
-        <p>Nhấn nút để quay số và nhận câu hỏi!</p>
-        
-        <input type="text" id="player-name" placeholder="Nhập tên của bạn">
-        <button onclick="spinWheel()">Quay số</button>
-        
-        <h2 id="result"></h2>
-        
-        <div id="quiz" class="quiz-container">
-            <h3>Câu hỏi:</h3>
-            <div class="image-container">
-                <img id="question-image" src="" alt="Câu hỏi">
-            </div>
-            <p id="question-text">Câu hỏi sẽ hiển thị ở đây.</p>
-            <form id="quiz-form">
-                <div id="answers"></div>
-                <button type="button" onclick="submitAnswer()">Nộp bài</button>
-            </form>
-            <p id="score"></p>
-            <p id="correct-answer"></p>
+    <h1>GAME ON BUS</h1>
+    <p>Nhấn nút để quay số và nhận câu hỏi!</p>
+    
+    <input type="text" id="player-name" placeholder="Nhập tên của bạn">
+    <button onclick="spinWheel()">Quay số</button>
+    
+    <h2 id="result"></h2>
+    
+    <div id="quiz" class="quiz-container" style="display:none;">
+        <h3>Câu hỏi:</h3>
+        <div class="image-container">
+            <img id="question-image" src="" alt="Câu hỏi">
         </div>
+        <p id="question-text">Câu hỏi sẽ hiển thị ở đây.</p>
+        <button onclick="submitAnswer()">Nộp bài</button>
     </div>
 
     <script>
-        let currentQuestion = {};
-
         function spinWheel() {
             let playerName = document.getElementById("player-name").value.trim();
-            if (playerName === "") {
+            if (!playerName) {
                 alert("Bạn phải nhập tên trước!");
                 return;
             }
-
-            let randomNum = Math.floor(Math.random() * 2) + 1;  
-            document.getElementById("result").innerText = "Bạn nhận được câu hỏi " + randomNum;
-            loadQuestion(randomNum);
-        }
-
-        function loadQuestion(num) {
-            const questions = {
-                1: { 
-                    text: "Câu hỏi 1", 
-                    image: "https://via.placeholder.com/300", 
-                    answers: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
-                    correct: ["4", "6", "8", "9"]
-                },
-                2: { 
-                    text: "Câu hỏi 2", 
-                    image: "https://via.placeholder.com/300",
-                    answers: ["A", "B", "C", "D", "E", "F", "G", "H", "I"],
-                    correct: ["B", "D", "G", "H"]
-                },
-            };
-
-            if (questions[num]) {
-                currentQuestion = questions[num];
-                document.getElementById("quiz").style.display = "block";
-                document.getElementById("question-text").innerText = currentQuestion.text;
-                let questionImage = document.getElementById("question-image");
-
-                if (currentQuestion.image) {
-                    questionImage.src = currentQuestion.image;
-                    questionImage.style.display = "block";
-                } else {
-                    questionImage.style.display = "none";
-                }
-
-                let answersHtml = "";
-                currentQuestion.answers.forEach(answer => {
-                    answersHtml += `<input type='checkbox' name='answer' value='${answer}' class='answer-checkbox' onclick='limitSelection()'> ${answer}<br>`;
-                });
-                document.getElementById("answers").innerHTML = answersHtml;
-            }
-        }
-
-        function limitSelection() {
-            let checkboxes = document.querySelectorAll(".answer-checkbox");
-            let selectedCount = 0;
-
-            checkboxes.forEach(checkbox => {
-                if (checkbox.checked) selectedCount++;
-            });
-
-            if (selectedCount > 4) {
-                alert("Bạn chỉ được chọn tối đa 4 đáp án!");
-                this.checked = false;
-            }
-        }
-
-        function submitAnswer() {
-            let selectedAnswers = [];
-            document.querySelectorAll(".answer-checkbox:checked").forEach(checkbox => {
-                selectedAnswers.push(checkbox.value);
-            });
-
-            if (selectedAnswers.length === 0) {
-                alert("Bạn phải chọn ít nhất một đáp án!");
-                return;
-            }
-
-            let correctCount = selectedAnswers.filter(ans => currentQuestion.correct.includes(ans)).length;
-            let totalCorrect = currentQuestion.correct.length;
-
-            document.getElementById("score").innerText = `Bạn trả lời đúng ${correctCount}/${totalCorrect} đáp án`;
-            document.getElementById("score").style.display = "block";
-
-            document.getElementById("correct-answer").innerText = "Đáp án đúng: " + currentQuestion.correct.join(", ");
-            document.getElementById("correct-answer").style.display = "block";
+            document.getElementById("result").innerText = "Bạn nhận được câu hỏi!";
+            document.getElementById("quiz").style.display = "block";
         }
     </script>
 </body>
