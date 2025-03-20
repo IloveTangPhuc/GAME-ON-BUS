@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VƯỢT NGÀN CAPTCHA CÙNG THE MASSIVE LOVE</title>
     <style>
+ sửa và thêm những link gg form 
+https://docs.google.com/forms/d/e/1FAIpQLSc4rmqbNKAEIPGE89I4wBFE6-GMUoTTIaaTXXu4dYUpYwaoXQ/viewform?usp=header
         body { 
             text-align: center; 
             font-family: Arial, sans-serif; 
@@ -94,8 +96,44 @@
             19: "https://docs.google.com/forms/d/e/1FAIpQLSe9_XcyAgvvHQ9iBQ_uUZlost58Y7cCOHqkID69_MDE6sMxcQ/viewform?usp=header",
             20: "https://docs.google.com/forms/d/e/1FAIpQLSfZi9gY32XzKzFwBv56K2ewbsTuEOjNUIY2GMrOvoviRBt90A/viewform?usp=header"
         };
+        let currentRotation = 0;
+        const arc = (2 * Math.PI) / segments.length;
+        
+        function drawWheel() {
+            const radius = wheelCanvas.width / 2;
+            const colors = ["#FF5733", "#33FF57", "#3357FF", "#FFFF33"];
+            let startAngle = 0;
+            
+            segments.forEach((num, i) => {
+                ctx.beginPath();
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.moveTo(radius, radius);
+                ctx.arc(radius, radius, radius, startAngle, startAngle + arc);
+                ctx.fill();
+                ctx.stroke();
+                ctx.fillStyle = "#000";
+                ctx.font = "bold 20px Arial";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText(num, radius + Math.cos(startAngle + arc / 2) * radius / 1.5, radius + Math.sin(startAngle + arc / 2) * radius / 1.5);
+                startAngle += arc;
+            });
+        }
+        
+        function spinWheel() {
+            const spins = Math.floor(Math.random() * 5) + 3; // Random spins
+            const winningIndex = Math.floor(Math.random() * segments.length);
+            const finalAngle = (360 - (winningIndex * (360 / segments.length))) + (360 * spins);
+            
+            currentRotation += finalAngle;
+            wheelCanvas.style.transform = rotate(${currentRotation}deg);
+            
+            setTimeout(() => {
+                document.getElementById("formLink").href = formLinks[segments[winningIndex]];
+                document.getElementById("formLink").style.display = "block";
+            }, 3000);
+        }
+        
+        drawWheel();
     </script>
 </body>
-</html>
-
-</html>
