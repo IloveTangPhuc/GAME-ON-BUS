@@ -3,27 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vòng Quay May Mắn</title>
+    <title>GAME ON BUS</title>
     <style>
         body { 
             text-align: center; 
             font-family: Arial, sans-serif; 
-            background: linear-gradient(135deg, purple, gold); 
+            background: url('https://imgur.com/a/er7EqcQ') no-repeat center center fixed; 
+            background-size: cover;
             color: white; 
+        }
+        #wheelContainer {
+            position: relative;
+            display: inline-block;
         }
         #wheelCanvas { 
             margin-top: 20px; 
             background-color: white; 
             border-radius: 50%; 
             transition: transform 3s ease-out;
+            width: 90vw;
+            max-width: 300px;
+            height: auto;
         }
-        #result { margin-top: 20px; font-size: 20px; font-weight: bold; }
-        #formLink { display: none; margin-top: 10px; font-size: 18px; color: white; }
+        #arrow {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 30px solid red;
+        }
+        #result { margin-top: 20px; font-size: 24px; font-weight: bold; }
+        #formLink { 
+            display: none; 
+            margin-top: 10px; 
+            font-size: 22px; 
+            font-weight: bold;
+            color: white; 
+        }
         button {
             background-color: gold;
             color: purple;
-            font-size: 18px;
-            padding: 10px 20px;
+            font-size: 20px;
+            padding: 12px 24px;
             border: none;
             cursor: pointer;
             border-radius: 5px;
@@ -31,8 +56,11 @@
     </style>
 </head>
 <body>
-    <h1>Vòng Quay May Mắn</h1>
-    <canvas id="wheelCanvas" width="300" height="300"></canvas>
+    <h1>GAME ON BUS</h1>
+    <div id="wheelContainer">
+        <div id="arrow"></div>
+        <canvas id="wheelCanvas" width="300" height="300"></canvas>
+    </div>
     <br>
     <button onclick="spinWheel()">Quay số</button>
     <div id="result"></div>
@@ -64,7 +92,9 @@
                 ctx.fill();
                 ctx.stroke();
                 ctx.fillStyle = "#000";
-                ctx.font = "16px Arial";
+                ctx.font = "bold 20px Arial";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
                 ctx.fillText(num, radius + Math.cos(startAngle + arc / 2) * radius / 1.5, radius + Math.sin(startAngle + arc / 2) * radius / 1.5);
                 startAngle += arc;
             });
