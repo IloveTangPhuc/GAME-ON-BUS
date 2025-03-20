@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GAME ON BUS</title>
+    <title>Vòng Quay May Mắn</title>
     <style>
         body { 
             text-align: center; 
@@ -34,13 +33,13 @@
         #arrow {
             position: absolute;
             top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(0deg);
+            right: -10px;
+            transform: translateY(-50%);
             width: 0;
             height: 0;
-            border-left: 20px solid transparent;
-            border-right: 20px solid transparent;
-            border-bottom: 40px solid red;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 30px solid white;
         }
         #result { margin-top: 20px; font-size: 24px; font-weight: bold; }
         #formLink { 
@@ -110,7 +109,7 @@
             const randomIndex = Math.floor(Math.random() * segments.length);
             const winningNumber = segments[randomIndex];
             const spins = Math.floor(Math.random() * 5) + 3; // Random spins
-            const angle = spins * 360 + (4 - winningNumber) * (360 / segments.length);
+            const angle = spins * 360 + (4 - winningNumber) * (360 / segments.length) + (360 / (segments.length * 2));
             currentRotation += angle;
             wheelCanvas.style.transform = `rotate(${currentRotation}deg)`;
             setTimeout(() => {
