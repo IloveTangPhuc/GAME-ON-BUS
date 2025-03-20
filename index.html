@@ -8,7 +8,7 @@
         body { 
             text-align: center; 
             font-family: Arial, sans-serif; 
-            background: url('https://private-user-images.githubusercontent.com/204056613/424818185-839096d7-d14c-4802-a81b-3da75991f6bc.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDI0NDU3MTcsIm5iZiI6MTc0MjQ0NTQxNywicGF0aCI6Ii8yMDQwNTY2MTMvNDI0ODE4MTg1LTgzOTA5NmQ3LWQxNGMtNDgwMi1hODFiLTNkYTc1OTkxZjZiYy5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUwMzIwJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MDMyMFQwNDM2NTdaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT1iYmU3YTNiMmFkY2U3YTQzZWMzZGM0M2IyZGM3MzAwYjQ4MWQ5YmI0NjJjMWJhYjA1MzY4MjkxNTI4OWE0Yjg1JlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.2kzCbMLzNLvMLSpPcS703sMkpqkSTw1v_BX5wPJygmI') no-repeat center center fixed; 
+            background: url('https://imgur.com/a/er7EqcQ') no-repeat center center fixed; 
             background-size: cover;
             color: white; 
             display: flex;
@@ -33,15 +33,14 @@
         #arrow {
             position: absolute;
             top: 50%;
-            right: -10px;
+            right: -20px;
             transform: translateY(-50%);
             width: 0;
             height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
+            border-left: 20px solid transparent;
+            border-right: 0 solid transparent;
             border-top: 30px solid white;
         }
-        #result { margin-top: 20px; font-size: 24px; font-weight: bold; }
         #formLink { 
             display: none; 
             margin-top: 10px; 
@@ -68,7 +67,6 @@
         <div id="arrow"></div>
     </div>
     <button onclick="spinWheel()">Quay số</button>
-    <div id="result"></div>
     <a id="formLink" href="#" target="_blank">Điền Form</a>
     
     <script>
@@ -76,18 +74,18 @@
         const ctx = wheelCanvas.getContext("2d");
         const segments = [1, 2, 3, 4];
         const formLinks = {
-            1: "https://docs.google.com/forms/d/e/1FAIpQLSc4rmqbNKAEIPGE89I4wBFE6-GMUoTTIaaTXXu4dYUpYwaoXQ/viewform?usp=",
-            2: "https://docs.google.com/forms/d/e/1FAIpQLSdjIG07eC8J1yTg1AHLOBDD644Xd67TALmCXzJO3-680J18TQ/viewform?usp=header",
-            3: "https://docs.google.com/forms/d/e/1FAIpQLSdJ2xWvnD-sQKUzPpfZncZIOFP9hfFaYy0f-Oa4yVPBDq0gvA/viewform?usp=header",
-            4: "https://docs.google.com/forms/d/e/1FAIpQLSdZKvGV-16zlhz4KZ5MMFjk17nT0oCz6M3D4-8k4tviOcjJYg/viewform?usp=header"
+            1: "https://docs.google.com/forms/d/e/1FAIpQLSdZKvGV-16zlhz4KZ5MMFjk17nT0oCz6M3D4-8k4tviOcjJYg/viewform?usp=header",
+            2: "https://docs.google.com/forms/d/1AldDvZUepmxhp3jt2N5QeqvhX8IY0ptQsVKFT5IuBgY/edit",
+            3: "https://docs.google.com/forms/d/1LuZ248aQpR4ZhPa-Qh9dUVmFgOnrOL4yMc2x74BndJ4/edit",
+            4: "https://docs.google.com/forms/d/1LuZ248aQpR4ZhPa-Qh9dUVmFgOnrOL4yMc2x74BndJ4/edit"
         };
         let currentRotation = 0;
-
+        const arc = (2 * Math.PI) / segments.length;
+        
         function drawWheel() {
             const radius = wheelCanvas.width / 2;
             const colors = ["#FF5733", "#33FF57", "#3357FF", "#FFFF33"];
             let startAngle = 0;
-            const arc = (2 * Math.PI) / segments.length;
             
             segments.forEach((num, i) => {
                 ctx.beginPath();
@@ -106,15 +104,15 @@
         }
         
         function spinWheel() {
-            const randomIndex = Math.floor(Math.random() * segments.length);
-            const winningNumber = segments[randomIndex];
             const spins = Math.floor(Math.random() * 5) + 3; // Random spins
-            const angle = spins * 360 + (4 - winningNumber) * (360 / segments.length) + (360 / (segments.length * 2));
-            currentRotation += angle;
+            const winningIndex = Math.floor(Math.random() * segments.length);
+            const finalAngle = (360 - (winningIndex * (360 / segments.length))) + (360 * spins);
+            
+            currentRotation += finalAngle;
             wheelCanvas.style.transform = `rotate(${currentRotation}deg)`;
+            
             setTimeout(() => {
-                document.getElementById("result").textContent = `Số trúng: ${winningNumber}`;
-                document.getElementById("formLink").href = formLinks[winningNumber];
+                document.getElementById("formLink").href = formLinks[segments[winningIndex]];
                 document.getElementById("formLink").style.display = "block";
             }, 3000);
         }
