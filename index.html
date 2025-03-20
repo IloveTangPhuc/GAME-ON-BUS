@@ -1,9 +1,10 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vòng Quay May Mắn</title>
+    <title>GAME ON BUS</title>
     <style>
         body { 
             text-align: center; 
@@ -32,14 +33,14 @@
         }
         #arrow {
             position: absolute;
-            top: -20px;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translate(-50%, -50%) rotate(0deg);
             width: 0;
             height: 0;
-            border-left: 25px solid transparent;
-            border-right: 25px solid transparent;
-            border-bottom: 50px solid red;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 40px solid red;
         }
         #result { margin-top: 20px; font-size: 24px; font-weight: bold; }
         #formLink { 
@@ -64,8 +65,8 @@
 <body>
     <h1>GAME ON BUS</h1>
     <div id="wheelContainer">
-        <div id="arrow"></div>
         <canvas id="wheelCanvas" width="300" height="300"></canvas>
+        <div id="arrow"></div>
     </div>
     <button onclick="spinWheel()">Quay số</button>
     <div id="result"></div>
