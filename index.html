@@ -32,14 +32,14 @@
         }
         #arrow {
             position: absolute;
-            top: -10px;
+            top: -20px;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-bottom: 30px solid red;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-bottom: 50px solid red;
         }
         #result { margin-top: 20px; font-size: 24px; font-weight: bold; }
         #formLink { 
@@ -109,7 +109,7 @@
             const randomIndex = Math.floor(Math.random() * segments.length);
             const winningNumber = segments[randomIndex];
             const spins = Math.floor(Math.random() * 5) + 3; // Random spins
-            const angle = spins * 360 + (winningNumber - 1) * (360 / segments.length);
+            const angle = spins * 360 + (4 - winningNumber) * (360 / segments.length);
             currentRotation += angle;
             wheelCanvas.style.transform = `rotate(${currentRotation}deg)`;
             setTimeout(() => {
