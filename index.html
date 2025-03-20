@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VƯỢT NGÀN CAPTCHA CÙNG THE MASSIVE LOVE</title>
     <style>
- sửa và thêm những link gg form 
 https://docs.google.com/forms/d/e/1FAIpQLSc4rmqbNKAEIPGE89I4wBFE6-GMUoTTIaaTXXu4dYUpYwaoXQ/viewform?usp=header
         body { 
             text-align: center; 
@@ -126,8 +125,7 @@ https://docs.google.com/forms/d/e/1FAIpQLSc4rmqbNKAEIPGE89I4wBFE6-GMUoTTIaaTXXu4
             const finalAngle = (360 - (winningIndex * (360 / segments.length))) + (360 * spins);
             
             currentRotation += finalAngle;
-            wheelCanvas.style.transform = rotate(${currentRotation}deg);
-            
+           wheelCanvas.style.transform = `rotate(${currentRotation}deg)`;
             setTimeout(() => {
                 document.getElementById("formLink").href = formLinks[segments[winningIndex]];
                 document.getElementById("formLink").style.display = "block";
