@@ -3,21 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GAME ON BUS</title>
+    <title>Vòng Quay May Mắn</title>
     <style>
         body { 
             text-align: center; 
             font-family: Arial, sans-serif; 
-            background: url('https://github.com/user-attachments/assets/839096d7-d14c-4802-a81b-3da75991f6bc') no-repeat center center fixed; 
+            background: url('https://private-user-images.githubusercontent.com/204056613/424818185-839096d7-d14c-4802-a81b-3da75991f6bc.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDI0NDU3MTcsIm5iZiI6MTc0MjQ0NTQxNywicGF0aCI6Ii8yMDQwNTY2MTMvNDI0ODE4MTg1LTgzOTA5NmQ3LWQxNGMtNDgwMi1hODFiLTNkYTc1OTkxZjZiYy5wbmc_WC1BbXotQWxnb3JpdGhtPUFXUzQtSE1BQy1TSEEyNTYmWC1BbXotQ3JlZGVudGlhbD1BS0lBVkNPRFlMU0E1M1BRSzRaQSUyRjIwMjUwMzIwJTJGdXMtZWFzdC0xJTJGczMlMkZhd3M0X3JlcXVlc3QmWC1BbXotRGF0ZT0yMDI1MDMyMFQwNDM2NTdaJlgtQW16LUV4cGlyZXM9MzAwJlgtQW16LVNpZ25hdHVyZT1iYmU3YTNiMmFkY2U3YTQzZWMzZGM0M2IyZGM3MzAwYjQ4MWQ5YmI0NjJjMWJhYjA1MzY4MjkxNTI4OWE0Yjg1JlgtQW16LVNpZ25lZEhlYWRlcnM9aG9zdCJ9.2kzCbMLzNLvMLSpPcS703sMkpqkSTw1v_BX5wPJygmI') no-repeat center center fixed; 
             background-size: cover;
             color: white; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
         }
         #wheelContainer {
             position: relative;
             display: inline-block;
+            margin-top: 20px;
         }
         #wheelCanvas { 
-            margin-top: 20px; 
             background-color: white; 
             border-radius: 50%; 
             transition: transform 3s ease-out;
@@ -52,6 +57,7 @@
             border: none;
             cursor: pointer;
             border-radius: 5px;
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -61,7 +67,6 @@
         <div id="arrow"></div>
         <canvas id="wheelCanvas" width="300" height="300"></canvas>
     </div>
-    <br>
     <button onclick="spinWheel()">Quay số</button>
     <div id="result"></div>
     <a id="formLink" href="#" target="_blank">Điền Form</a>
