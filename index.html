@@ -3,189 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GAME ON BUS</title>
-    
+    <title>Vòng Quay May Mắn</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        body { 
+            text-align: center; 
+            font-family: Arial, sans-serif; 
+            background: linear-gradient(135deg, purple, gold); 
+            color: white; 
         }
-
-        body {
-            background-image: url('https://imgur.com/a/er7EqcQ');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: white; /* Màu chữ trắng */
-            font-family: Arial, sans-serif;
-            padding: 20px;
+        #wheelCanvas { 
+            margin-top: 20px; 
+            background-color: white; 
+            border-radius: 50%; 
+            transition: transform 3s ease-out;
         }
-
-        .quiz-container {
-            background: rgba(0, 0, 0, 0.6);
-            padding: 15px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 400px;
-        }
-
-        .image-container {
-            width: 100%;
-            max-width: 550px;
-            aspect-ratio: 55 / 90; /* Giữ đúng tỉ lệ 55x90cm */
-            margin: auto;
-            border: 2px solid white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
+        #result { margin-top: 20px; font-size: 20px; font-weight: bold; }
+        #formLink { display: none; margin-top: 10px; font-size: 18px; color: white; }
         button {
-            background: #ff4500;
-            color: white;
-            padding: 10px;
+            background-color: gold;
+            color: purple;
+            font-size: 18px;
+            padding: 10px 20px;
             border: none;
             cursor: pointer;
-            font-size: 16px;
             border-radius: 5px;
-            margin-top: 10px;
-        }
-
-        button:hover {
-            background: #e03e00;
-        }
-
-        input[type="text"] {
-            padding: 10px;
-            width: 80%;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            border: none;
-        }
-
-        #result, #correct-answer, #score {
-            font-weight: bold;
-            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <h1>GAME ON BUS</h1>
-    <p>Nhấn nút để quay số và nhận câu hỏi!</p>
-    
-    <input type="text" id="player-name" placeholder="Nhập tên của bạn">
+    <h1>Vòng Quay May Mắn</h1>
+    <canvas id="wheelCanvas" width="300" height="300"></canvas>
+    <br>
     <button onclick="spinWheel()">Quay số</button>
+    <div id="result"></div>
+    <a id="formLink" href="#" target="_blank">Điền Form</a>
     
-    <h2 id="result"></h2>
-    
-    <div id="quiz" class="quiz-container" style="display:none;">
-        <h3>Câu hỏi:</h3>
-        <div class="image-container">
-            <img id="question-image" src="" alt="Câu hỏi">
-        </div>
-        <p id="question-text"></p>
-        <form id="quiz-form">
-            <div id="answers"></div>
-            <button type="button" onclick="submitAnswer()">Nộp bài</button>
-        </form>
-        <p id="score"></p>
-        <p id="correct-answer"></p>
-    </div>
+    <script>
+        const wheelCanvas = document.getElementById("wheelCanvas");
+        const ctx = wheelCanvas.getContext("2d");
+        const segments = [1, 2, 3, 4];
+        const formLinks = {
+            1: "https://docs.google.com/forms/d/e/1FAIpQLSdZKvGV-16zlhz4KZ5MMFjk17nT0oCz6M3D4-8k4tviOcjJYg/viewform?usp=header",
+            2: "https://docs.google.com/forms/d/1AldDvZUepmxhp3jt2N5QeqvhX8IY0ptQsVKFT5IuBgY/edit",
+            3: "https://docs.google.com/forms/d/1LuZ248aQpR4ZhPa-Qh9dUVmFgOnrOL4yMc2x74BndJ4/edit",
+            4: "https://docs.google.com/forms/d/1LuZ248aQpR4ZhPa-Qh9dUVmFgOnrOL4yMc2x74BndJ4/edit"
+        };
+        let currentRotation = 0;
 
-   <script>
-    let currentQuestion = {};
-
-    const questions = {
-        1: { 
-            text: "Câu hỏi 1: Chọn 4 đáp án đúng", 
-            image: "https://i.imgur.com/ZzNlHUj.jpeg",
-            answers: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
-            correct: ["4", "6", "8", "9"]
-        },
-        2: { 
-            text: "Câu hỏi 2: Chọn 4 đáp án đúng", 
-            image: "https://i.imgur.com/IdrMrH9.jpeg",
-            answers: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
-            correct: ["2", "3", "4", "8"]
+        function drawWheel() {
+            const radius = wheelCanvas.width / 2;
+            const colors = ["#FF5733", "#33FF57", "#3357FF", "#FFFF33"];
+            let startAngle = 0;
+            const arc = (2 * Math.PI) / segments.length;
+            
+            segments.forEach((num, i) => {
+                ctx.beginPath();
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.moveTo(radius, radius);
+                ctx.arc(radius, radius, radius, startAngle, startAngle + arc);
+                ctx.fill();
+                ctx.stroke();
+                ctx.fillStyle = "#000";
+                ctx.font = "16px Arial";
+                ctx.fillText(num, radius + Math.cos(startAngle + arc / 2) * radius / 1.5, radius + Math.sin(startAngle + arc / 2) * radius / 1.5);
+                startAngle += arc;
+            });
         }
-    };
-
-    function spinWheel() {
-        let playerName = document.getElementById("player-name").value.trim();
-        if (!playerName) {
-            alert("Bạn phải nhập tên trước!");
-            return;
+        
+        function spinWheel() {
+            const randomIndex = Math.floor(Math.random() * segments.length);
+            const winningNumber = segments[randomIndex];
+            const spins = Math.floor(Math.random() * 5) + 3; // Random spins
+            const angle = spins * 360 + (winningNumber - 1) * (360 / segments.length);
+            currentRotation += angle;
+            wheelCanvas.style.transform = `rotate(${currentRotation}deg)`;
+            setTimeout(() => {
+                document.getElementById("result").textContent = `Số trúng: ${winningNumber}`;
+                document.getElementById("formLink").href = formLinks[winningNumber];
+                document.getElementById("formLink").style.display = "block";
+            }, 3000);
         }
-
-        let questionNumbers = Object.keys(questions); // Lấy danh sách số câu hỏi
-        let randomIndex = Math.floor(Math.random() * questionNumbers.length);
-        let randomNum = questionNumbers[randomIndex]; // Chọn số câu hỏi ngẫu nhiên
-
-        document.getElementById("result").innerText = "Bạn nhận được câu hỏi số " + randomNum;
-        loadQuestion(randomNum);
-    }
-
-    function loadQuestion(num) {
-        currentQuestion = questions[num];
-        document.getElementById("quiz").style.display = "block";
-        document.getElementById("question-text").innerText = currentQuestion.text;
-        document.getElementById("question-image").src = currentQuestion.image;
-
-        let answersHtml = "";
-        currentQuestion.answers.forEach(answer => {
-            answersHtml += `<input type='checkbox' name='answer' value='${answer}' class='answer-checkbox' onclick='limitSelection()'> ${answer}<br>`;
-        });
-        document.getElementById("answers").innerHTML = answersHtml;
-    }
-
-    function limitSelection() {
-        let checkboxes = document.querySelectorAll(".answer-checkbox");
-        let selectedCount = 0;
-
-        checkboxes.forEach(checkbox => {
-            if (checkbox.checked) selectedCount++;
-        });
-
-        if (selectedCount > 4) {
-            alert("Bạn chỉ được chọn tối đa 4 đáp án!");
-            this.checked = false;
-        }
-    }
-
-    function submitAnswer() {
-        let selectedAnswers = [];
-        document.querySelectorAll(".answer-checkbox:checked").forEach(checkbox => {
-            selectedAnswers.push(checkbox.value);
-        });
-
-        if (selectedAnswers.length !== 4) {
-            alert("Bạn phải chọn đúng 4 đáp án!");
-            return;
-        }
-
-        let correctCount = selectedAnswers.filter(ans => currentQuestion.correct.includes(ans)).length;
-        let totalCorrect = currentQuestion.correct.length;
-
-        document.getElementById("score").innerText = `Bạn trả lời đúng ${correctCount}/${totalCorrect} đáp án`;
-        document.getElementById("score").style.display = "block";
-
-        document.getElementById("correct-answer").innerText = "Đáp án đúng: " + currentQuestion.correct.join(", ");
-        document.getElementById("correct-answer").style.display = "block";
-    }
-</script>
+        
+        drawWheel();
+    </script>
 </body>
 </html>
