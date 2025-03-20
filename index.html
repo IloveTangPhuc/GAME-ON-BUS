@@ -71,52 +71,31 @@
     <script>
         const wheelCanvas = document.getElementById("wheelCanvas");
         const ctx = wheelCanvas.getContext("2d");
-        const segments = [1, 2, 3, 4];
+        const segments = Array.from({length: 20}, (_, i) => i + 1);
         const formLinks = {
-             1: "https://docs.google.com/forms/d/e/1FAIpQLSc4rmqbNKAEIPGE89I4wBFE6-GMUoTTIaaTXXu4dYUpYwaoXQ/viewform?usp=header",
+            1: "https://docs.google.com/forms/d/e/1FAIpQLSc4rmqbNKAEIPGE89I4wBFE6-GMUoTTIaaTXXu4dYUpYwaoXQ/viewform?usp=header",
             2: "https://docs.google.com/forms/d/e/1FAIpQLSdjIG07eC8J1yTg1AHLOBDD644Xd67TALmCXzJO3-680J18TQ/viewform?usp=header",
             3: "https://docs.google.com/forms/d/e/1FAIpQLSdJ2xWvnD-sQKUzPpfZncZIOFP9hfFaYy0f-Oa4yVPBDq0gvA/viewform?usp=header",
-            4: "https://docs.google.com/forms/d/e/1FAIpQLSdZKvGV-16zlhz4KZ5MMFjk17nT0oCz6M3D4-8k4tviOcjJYg/viewform?usp=header"
+            4: "https://docs.google.com/forms/d/e/1FAIpQLSdZKvGV-16zlhz4KZ5MMFjk17nT0oCz6M3D4-8k4tviOcjJYg/viewform?usp=header",
+            5: "https://docs.google.com/forms/d/e/1FAIpQLSeRrmUW-owHTr1gr1HZ7buIGIp6pwrHQHeFhT4kKtODdcq7ug/viewform?usp=header",
+            6: "https://docs.google.com/forms/d/e/1FAIpQLSeXdWlV65GcnyYvjiFs7mdGMd4OGTHbgXeizZ9hyawHkokCKw/viewform?usp=header",
+            7: "https://docs.google.com/forms/d/e/1FAIpQLSfDrmhLYp5DB0qZGX9tkeUmn9VObcEpT6k8GKzK998V1P6DBg/viewform?usp=header",
+            8: "https://docs.google.com/forms/d/e/1FAIpQLSfeJn03PntjLNWFkhfNALi-yBQ36ppFt602LqAd9bf5tcN8DA/viewform?usp=header",
+            9: "https://docs.google.com/forms/d/e/1FAIpQLSddjYltBMnTcG3bceJoTbhvVw9Aw15E4yKMsyuQHaZURdbbKQ/viewform?usp=header",
+            10: "https://docs.google.com/forms/d/e/1FAIpQLScvus4QDFEge5AYeu2ofu_JNZFrq1Q4RjP1HCzcbSYpSB_TUA/viewform?usp=header",
+            11: "https://docs.google.com/forms/d/e/1FAIpQLScdPNZBSq8uokvn99_7kcB6qAMGIsFW7nzgALztyQYzFe-Nfw/viewform?usp=header",
+            12: "https://docs.google.com/forms/d/e/1FAIpQLSdH92IB3tKrj_eEYrkJYgZ_v00MRC2_lpvhUjkGYRFvYUGFPA/viewform?usp=header",
+            13: "https://docs.google.com/forms/d/e/1FAIpQLSc9J3fy0ycMSRIPpuRImJxfl05I77EMDVMUCJLmaYvQwP1J4A/viewform?usp=header",
+            14: "https://docs.google.com/forms/d/e/1FAIpQLSdT0Qh8cnJcV6_AntrX_SXTCKLaz2LHXEBJ5bUQ0DWkG73C5A/viewform?usp=header",
+            15: "https://docs.google.com/forms/d/e/1FAIpQLSf1Nn9c9rv8L79uMtSMn0zJ0__x4oWIXkqhbvQcTcichsUGoA/viewform?usp=header",
+            16: "https://docs.google.com/forms/d/e/1FAIpQLScLmaPkPQRPiejWQa3gwJlUA5Wabsg_oNHKrzMoLgPlx9E6EA/viewform?usp=header",
+            17: "https://docs.google.com/forms/d/e/1FAIpQLSeOdo7AHiTTPYxpJ_q_D4mkAAUUo7w0iuV6neiOe0bTDZJtpA/viewform?usp=header",
+            18: "https://docs.google.com/forms/d/e/1FAIpQLSd4lluRXXsJCMKs2iNMCQGoi_MK68BdwEOQ1IYZUiUfoOljaw/viewform?usp=header",
+            19: "https://docs.google.com/forms/d/e/1FAIpQLSe9_XcyAgvvHQ9iBQ_uUZlost58Y7cCOHqkID69_MDE6sMxcQ/viewform?usp=header",
+            20: "https://docs.google.com/forms/d/e/1FAIpQLSfZi9gY32XzKzFwBv56K2ewbsTuEOjNUIY2GMrOvoviRBt90A/viewform?usp=header"
         };
-        let currentRotation = 0;
-        const arc = (2 * Math.PI) / segments.length;
-        
-        function drawWheel() {
-            const radius = wheelCanvas.width / 2;
-            const colors = ["#FF5733", "#33FF57", "#3357FF", "#FFFF33"];
-            let startAngle = 0;
-            
-            segments.forEach((num, i) => {
-                ctx.beginPath();
-                ctx.fillStyle = colors[i % colors.length];
-                ctx.moveTo(radius, radius);
-                ctx.arc(radius, radius, radius, startAngle, startAngle + arc);
-                ctx.fill();
-                ctx.stroke();
-                ctx.fillStyle = "#000";
-                ctx.font = "bold 20px Arial";
-                ctx.textAlign = "center";
-                ctx.textBaseline = "middle";
-                ctx.fillText(num, radius + Math.cos(startAngle + arc / 2) * radius / 1.5, radius + Math.sin(startAngle + arc / 2) * radius / 1.5);
-                startAngle += arc;
-            });
-        }
-        
-        function spinWheel() {
-            const spins = Math.floor(Math.random() * 5) + 3; // Random spins
-            const winningIndex = Math.floor(Math.random() * segments.length);
-            const finalAngle = (360 - (winningIndex * (360 / segments.length))) + (360 * spins);
-            
-            currentRotation += finalAngle;
-            wheelCanvas.style.transform = `rotate(${currentRotation}deg)`;
-            
-            setTimeout(() => {
-                document.getElementById("formLink").href = formLinks[segments[winningIndex]];
-                document.getElementById("formLink").style.display = "block";
-            }, 3000);
-        }
-        
-        drawWheel();
     </script>
 </body>
+</html>
+
 </html>
